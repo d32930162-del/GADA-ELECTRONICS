@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GADA ELECTRONICS - Wholesale & Retail</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: #121212; color: #fff; }
+        header { background: #000; color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 2px solid #00BFFF; flex-wrap: wrap; gap: 15px; }
+        .logo-box { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo { background: #000; color: #00BFFF; border: 2px solid #00BFFF; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; border-radius: 50%; }
+        
+        /* Search Bar Styling */
+        .search-container { flex: 1; max-width: 500px; display: flex; }
+        .search-input { width: 100%; padding: 10px 15px; border: none; border-radius: 5px 0 0 5px; background: #222; color: #fff; font-size: 16px; outline: none; border: 1px solid #444; }
+        .search-input:focus { border-color: #00BFFF; }
+        .search-btn { background: #00BFFF; color: #000; border: none; padding: 0 20px; font-weight: bold; border-radius: 0 5px 5px 0; cursor: pointer; }
+        .search-btn:hover { background: #009acd; }
+
+        .banner { background: #00BFFF; color: #000; text-align: center; padding: 25px 10px; font-size: 22px; font-weight: bold; }
+        .container { padding: 20px; max-width: 1200px; margin: auto; }
+        .section-title { font-size: 24px; color: #00BFFF; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
+        /* Products Grid */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .product-card { background: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 15px; text-align: center; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card:hover { border-color: #00BFFF; transform: translateY(-3px); }
+        .product-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 5px; background: #fff; }
+        .brand-tag { font-size: 11px; background: #00BFFF; color: #000; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 8px; }
+        .product-name { font-size: 17px; font-weight: bold; margin: 6px 0 4px; color: #fff; }
+        .product-quality { font-size: 13px; color: #b0b0b0; margin-bottom: 8px; line-height: 1.4; }
+        .product-price { font-size: 18px; color: #00FF7F; font-weight: bold; margin-bottom: 5px; }
+        .free-shipping { font-size: 12px; color: #00BFFF; font-weight: bold; margin-bottom: 12px; }
+        
+        .btn-group { display: flex; gap: 10px; }
+        .btn { background: #333; color: #fff; border: none; padding: 10px; cursor: pointer; border-radius: 5px; width: 100%; font-weight: bold; font-size: 14px; }
+        .btn-cart { background: #222; border: 1px solid #00BFFF; color: #00BFFF; }
+        .btn-buy { background: #00BFFF; color: #000; }
+        .btn:hover { opacity: 0.9; }
+
+        /* Product Detail Page View */
+        #product-detail-view { display: none; padding: 20px 0; }
+        .pdp-container { display: flex; flex-wrap: wrap; gap: 30px; background: #1e1e1e; padding: 20px; border-radius: 8px; border: 1px solid #333; }
+        .pdp-image { flex: 1; min-width: 300px; text-align: center; }
+        .pdp-image img { width: 100%; max-height: 400px; object-fit: contain; background: #fff; border-radius: 8px; }
+        .pdp-info { flex: 2; min-width: 300px; }
+        .pdp-title { font-size: 26px; font-weight: bold; margin-bottom: 5px; color: #fff; }
+        .back-btn { background: #333; color: #00BFFF; border: 1px solid #00BFFF; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 15px; font-weight: bold; }
+        .back-btn:hover { background: #00BFFF; color: #000; }
+
+        /* Checkout / Payment Section */
+        #checkout-view { display: none; padding: 20px 0; background: #1e1e1e; border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #00BFFF; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; background: #222; border: 1px solid #444; color: #fff; border-radius: 5px; }
+
+        footer { background: #000; color: #fff; text-align: center; padding: 25px; margin-top: 40px; border-top: 2px solid #00BFFF; }
+        footer a { color: #00BFFF; text-decoration: none; margin: 0 8px; display: inline-block; margin-top: 8px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section with Search Bar -->
+    <header>
+        <div class="logo-box" onclick="goHome()">
+            <div class="logo">GE</div>
+            <h2>GADA ELECTRONICS</h2>
+        </div>
+        
+        <!-- Live Search Bar -->
+        <div class="search-container">
+            <input type="text" id="search-box" class="search-input" placeholder="Search brands: Syska, Havells, boAt, Noise, Mi..." onkeyup="searchProducts()">
+            <button class="search-btn" onclick="searchProducts()">🔍</button>
+        </div>
+
+        <div>🛒 Cart <span id="cart-count">(0)</span></div>
+    </header>
+
+    <!-- Banner Section -->
+    <div class="banner" id="main-banner">
+        ⚡ GADA ELECTRONICS - Multi-Brand Wholesale & Retail | Free Delivery via Delhivery ⚡
+    </div>
+
+    <div class="container">
+        
+        <!-- HOME / SHOP PAGE VIEW -->
+        <div id="home-view">
+            <h2 class="section-title">All Brands Electronics, Toys & Gadgets Collection</h2>
+            <div class="products-grid" id="product-list">
+                <!-- Products dynamically loaded -->
+            </div>
+            <div id="no-result" style="display: none; text-align: center; padding: 40px; color: #888; font-size: 18px;">
+                ❌ Koi product ya brand nahi mila! Kuch aur search karke dekhein.
+            </div>
+        </div>
+
+        <!-- PRODUCT DETAIL PAGE (PDP) VIEW -->
+        <div id="product-detail-view">
+            <button class="back-btn" onclick="goHome()">← Back to Products</button>
+            <div class="pdp-container">
+                <div class="pdp-image">
+                    <img id="pdp-img" src="" alt="Product Image">
+                </div>
+                <div class="pdp-info">
+                    <div style="margin-bottom: 5px;"><span id="pdp-brand" class="brand-tag" style="font-size: 13px; padding: 3px 8px;"></span></div>
+                    <div class="pdp-title" id="pdp-name"></div>
+                    <div class="product-quality" id="pdp-quality" style="font-size: 15px; margin-bottom: 15px;"></div>
+                    <div class="product-price" id="pdp-price" style="font-size: 24px; margin-bottom: 10px;"></div>
+                    <div class="free-shipping" style="font-size: 14px; margin-bottom: 20px;">🚚 FREE Delivery via Delhivery</div>
+                    <p id="pdp-desc" style="color: #ccc; margin-bottom: 20px; line-height: 1.5;"></p>
+                    
+                    <div class="btn-group" style="max-width: 400px;">
+                        <button class="btn btn-cart" onclick="addToCartFromDetail()">Add to Cart</button>
+                        <button class="btn btn-buy" onclick="openCheckout()">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHECKOUT & PAYMENT VIEW -->
+        <div id="checkout-view">
+            <button class="back-btn" onclick="goHome()">← Cancel / Home</button>
+            <h2 class="section-title">Checkout & Payment (COD / Online)</h2>
+            <div style="max-width: 600px; margin: auto;">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Aapka Naam">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="text" placeholder="10 Digit Mobile Number">
+                </div>
+                <div class="form-group">
+                    <label>Shipping Address (Free Delivery)</label>
+                    <input type="text" placeholder="House No, Street, City, Pincode">
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select>
+                        <option value="cod">Cash on Delivery (COD)</option>
+                        <option value="online">Online Payment (Razorpay / Cashfree - UPI/Cards)</option>
+                    </select>
+                </div>
+                <button class="btn btn-buy" onclick="placeOrder()">Place Order Now</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer Legal Pages -->
+    <footer>
+        <p>&copy; 2026 GADA ELECTRONICS. All Rights Reserved.</p>
+        <div>
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Terms & Conditions</a> | 
+            <a href="#">Refund & Return Policy</a> | 
+            <a href="#">Shipping Policy (Free Delivery)</a>
+        </div>
+    </footer>
+
+    <script>
+        // Multi-Brand Database (LEDs, Earbuds, Smartwatches, Speakers, Toys from Different Companies)
+        const products = [
+            // LED Bulbs - Different Companies (Syska, Havells, Wipro)
+            {
+                id: 1,
+                brand: "SYSKA LED",
+                name: "Syska 9W Cool Day Light LED Bulb",
+                price: "₹99",
+                mrp: "₹249",
+                quality: "Quality: 90% Energy Saving, 2 Years Brand Warranty",
+                desc: "Syska 9 Watt LED bulb jo kam bijli khapat me tez roshni deta hai. Wholesale aur retail dono ke liye best quality.",
+                image: "https://images.unsplash.com/photo-1550985616-11b30a006bc3?w=500"
+            },
+            {
+                id: 2,
+                brand: "HAVELLS LED",
+                name: "Havells 12W B22 LED White Bulb",
+                price: "₹149",
+                mrp: "₹349",
+                quality: "Quality: High Surge Protection, Long Life Span",
+                desc: "Havells ki trusted quality ka 12W LED bulb jo high voltage fluctuation se bhi safe rehta hai.",
+                image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=500"
+            },
+            {
+                id: 3,
+                brand: "WIPRO LED",
+                name: "Wipro Garnet 9W Smart LED Bulb",
+                price: "₹199",
+                mrp: "₹499",
+                quality: "Quality: Multi-Color RGB Control via Mobile App",
+                desc: "Wipro smart bulb jise aap apne phone se connect karke alag-alag rang ke colors me badal sakte hain.",
+                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500"
+            },
+
+            // TWS Earbuds - Different Brands (boAt, Boult, Noise)
+            {
+                id: 4,
+                brand: "boAt",
+                name: "boAt Airdopes 131 Wireless Earbuds",
+                price: "₹799",
+                mrp: "₹2999",
+                quality: "Quality: 13mm Drivers, 15H Total Playback, ASAP Charging",
+                desc: "boAt ka powerful sound aur immersive bass dene wala bestselling TWS earbuds.",
+                image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500"
+            },
+            {
+                id: 5,
+                brand: "Boult Audio",
+                name: "Boult Audio AirBass Truebuds",
+                price: "₹699",
+                mrp: "₹2499",
+                quality: "Quality: Heavy Bass, IPX5 Water Resistant",
+                desc: "Boult ki taraf se stylish design aur water-resistant build quality wale wireless earbuds.",
+                image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=500"
+            },
+
+            // Smartwatches - Different Brands (Noise, Fire-Boltt)
+            {
+                id: 6,
+                brand: "NOISE",
+                name: "Noise ColorFit Pulse Smart Watch",
+                price: "₹1299",
+                mrp: "₹3999",
+                quality: "Quality: 1.4\" Full Touch Display, SpO2 & Heart Rate Monitor",
+                desc: "Noise brand ki popular smartwatch jo health tracking aur stylish fitness look deti hai.",
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500"
+            },
+            {
+                id: 7,
+                brand: "FIRE-BOLTT",
+                name: "Fire-Boltt Ninja Call Bluetooth Watch",
+                price: "₹1499",
+                mrp: "₹4999",
+                quality: "Quality: Bluetooth Calling, Metal Body Finish",
+                desc: "Seedha ghadi se baat karne ki suvidha (Bluetooth calling) aur premium metallic look ke sath.",
+                image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500"
+            },
+
+            // Bluetooth Speakers - Different Brands (JBL, Zebronics)
+            {
+                id: 8,
+                brand: "ZEBRONICS",
+                name: "Zebronics ZEB-Vortex Portable Speaker",
+                price: "₹499",
+                mrp: "₹1299",
+                quality: "Quality: TWS Support, USB/Micro SD playback, FM Radio",
+                desc: "Zebronics ka shandar portable speaker jo loud sound aur multiple connectivity options deta hai.",
+                image: "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500"
+            },
+
+            // Kids Toys & Gadgets - Different Brands
+            {
+                id: 9,
+                brand: "HOT WHEELS / TOY",
+                name: "Kids High-Speed Electric Remote Car",
+                price: "₹699",
+                mrp: "₹1599",
+                quality: "Quality: Shockproof ABS Plastic, 2.4GHz Remote Control",
+                desc: "Bacho ke liye high-speed racing remote control car jo kafi durable aur non-toxic material se bani hai.",
+                image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=500"
+            },
+            {
+                id: 10,
+                brand: "SKY DRONE",
+                name: "Kids Hand-Controlled Flying Drone Toy",
+                price: "₹899",
+                mrp: "₹1999",
+                quality: "Quality: Infrared Sensor, Auto-Hover Technology",
+                desc: "Bina remote ke sirf haath ke ishare se udne wala bacho ka pasandida flying drone toy.",
+                image: "https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=500"
+            },
+
+            // Mobile Accessories - Chargers & Trimmers (Philips, Mi)
+            {
+                id: 11,
+                brand: "PHILIPS",
+                name: "Philips BT1232/15 USB Beard Trimmer",
+                price: "₹799",
+                mrp: "₹1099",
+                quality: "Quality: DuraPower Technology, Skin-friendly Blades",
+                desc: "Philips brand ka bharosemand trimmers jo lambe samay tak bina kharab hue smooth trimming deta hai.",
+                image: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=500"
+            },
+            {
+                id: 12,
+                brand: "MI / XIAOMI",
+                name: "Mi 22.5W Fast Charger & Cable Combo",
+                price: "₹399",
+                mrp: "₹799",
+                quality: "Quality: Quick Charge Support, Multi-layer Circuit Protection",
+                desc: "Mi ka original fast wall charger adapter aur heavy-duty charging cable ka complete set.",
+                image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500"
+            }
+        ];
+
+        let cartCount = 0;
+        let currentProduct = null;
+
+        // Load Products onto Homepage Grid
+        function displayProducts(items) {
+            const grid = document.getElementById('product-list');
+            const noResult = document.getElementById('no-result');
+            grid.innerHTML = "";
+
+            if (items.length === 0) {
+                noResult.style.display = 'block';
+                return;
+            } else {
+                noResult.style.display = 'none';
+            }
+
+            items.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card" onclick="viewProduct(${p.id})">
+                        <div>
+                            <img src="${p.image}" alt="${p.name}">
+                            <span class="brand-tag">${p.brand}</span>
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-quality">${p.quality}</div>
+                        </div>
+                        <div>
+                            <div class="product-price">${p.price} <span style="font-size: 12px; color:#888; text-decoration: line-through;">${p.mrp}</span></div>
+                            <div class="free-shipping">🚚 FREE Delivery</div>
+                            <div class="btn-group" onclick="event.stopPropagation()">
+                                <button class="btn btn-cart" onclick="addToCart()">Add to Cart</button>
+                                <button class="btn btn-buy" onclick="viewProduct(${p.id})">Buy Now</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Live Search Functionality (Search by Brand Name or Product Name)
+        function searchProducts() {
+            const query = document.getElementById('search-box').value.toLowerCase();
+            const filtered = products.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.brand.toLowerCase().includes(query) || 
+                p.quality.toLowerCase().includes(query) || 
+                p.desc.toLowerCase().includes(query)
+            );
+            displayProducts(filtered);
+            goHomeViewOnly();
+        }
+
+        function goHomeViewOnly() {
+            document.getElementById('home-view').style.display = 'block';
+            document.getElementById('product-detail-view').style.display = 'none';
+            document.getElementById('checkout-view').style.display = 'none';
+            document.getElementById('main-banner').style.display = 'block';
+        }
+
+        // Open Amazon-style Product Detail Page
+        function viewProduct(id) {
+            currentProduct = products.find(p => p.id === id);
+            document.getElementById('pdp-img').src = currentProduct.image;
+            document.getElementById('pdp-brand').innerText = currentProduct.brand;
+            document.getElementById('pdp-name').innerText = currentProduct.name;
+            document.getElementById('pdp-quality').innerText = currentProduct.quality;
+            document.getElementById('pdp-price').innerText = currentProduct.price + " (MRP: " + currentProduct.mrp + ")";
+            document.getElementById('pdp-desc').innerText = currentProduct.desc;
+
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('product-detail-view').style.display = 'block';
+            document.getElementById('checkout-view').style.display = 'none';
+            document.getElementById('main-banner').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        // Return to Home Screen
+        function goHome() {
+            document.getElementById('search-box').value = "";
+            displayProducts(products);
+            goHomeViewOnly();
+            window.scrollTo(0, 0);
+        }
+
+        // Open Checkout Page
+        function openCheckout() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('product-detail-view').style.display = 'none';
+            document.getElementById('checkout-view').style.display = 'block';
+            document.getElementById('main-banner').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        function addToCart() {
+            cartCount++;
+            document.getElementById('cart-count').innerText = '(' + cartCount + ')';
+            alert('Product added to Cart successfully!');
+        }
+
+        function addToCartFromDetail() {
+            addToCart();
+        }
+
+        function placeOrder() {
+            alert('Order Placed Successfully! (Free Delivery via Delhivery assigned). Thank you for shopping with GADA ELECTRONICS.');
+            goHome();
+        }
+
+        // Initial Load
+        displayProducts(products);
+    </script>
+
+</body>
+</html>
